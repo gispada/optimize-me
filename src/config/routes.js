@@ -6,22 +6,24 @@ import Registration from '../pages/Registration'
 import Gallery from '../pages/Gallery'
 import Photos from '../pages/Photos'
 
+const iconStyle = { color: 'secondary.main' }
+
 export const routes = [
   {
     title: 'Home',
-    icon: <Home />,
+    icon: <Home sx={iconStyle} />,
     path: '/',
     component: HomePage
   },
   {
     title: 'Registration',
-    icon: <Add />,
+    icon: <Add sx={iconStyle} />,
     path: '/registration',
     component: Registration
   },
   {
     title: 'Gallery',
-    icon: <PhotoLibrary />,
+    icon: <PhotoLibrary sx={iconStyle} />,
     path: '/gallery',
     component: Gallery,
     routes: [

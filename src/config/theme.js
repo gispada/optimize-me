@@ -4,16 +4,17 @@ export default createTheme({
   drawerWidth: 240,
   palette: {
     primary: {
-      light: '#757ce8',
-      main: '#3f50b5',
-      dark: '#002884',
+      light: '#fb9274',
+      main: '#f96e46',
+      dark: '#f85325',
       contrastText: '#fff'
     },
     secondary: {
-      light: '#ff7961',
-      main: '#f44336',
-      dark: '#ba000d',
+      light: '#26407d',
+      main: '#192a51',
+      dark: '#13203e',
       contrastText: '#000'
-    }
+    },
+    background: { main: '#e9e9ed' }
   }
 })

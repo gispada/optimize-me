@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { routes } from './config/routes'
 import { Shell } from './components/Shell'
 import NotFound from './pages/NotFound'
+import { ReactComponent as Logo } from './logo.svg'
 
 const renderRoute = ({ path, routes, component: RouteComponent }) => {
   if (routes) {
@@ -20,7 +21,7 @@ function App() {
   return (
     <BrowserRouter>
       <CssBaseline />
-      <Shell title="Optimize me" menu={routes}>
+      <Shell title="OPTIMIZE/ME" logo={<Logo />} menu={routes}>
         <Routes>
           {routes.map(renderRoute)}
           <Route path="/404" element={<NotFound />} />

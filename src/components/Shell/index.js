@@ -21,7 +21,7 @@ const drawerStyle = {
   '& .MuiDrawer-paper': { width: ({ drawerWidth }) => drawerWidth }
 }
 
-export const Shell = ({ title, menu, children }) => {
+export const Shell = ({ title, logo, menu, children }) => {
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false)
 
   const toggleMobileDrawer = () => setMobileDrawerOpen(!mobileDrawerOpen)
@@ -46,6 +46,7 @@ export const Shell = ({ title, menu, children }) => {
     <>
       <AppBar
         position="fixed"
+        color="secondary"
         sx={{ zIndex: ({ zIndex }) => zIndex.drawer + 1 }}
       >
         <Toolbar>
@@ -53,13 +54,16 @@ export const Shell = ({ title, menu, children }) => {
             color="inherit"
             edge="start"
             onClick={toggleMobileDrawer}
-            sx={{ mr: 2, display: { sm: 'none' } }}
+            sx={{ display: { sm: 'none' } }}
           >
-            <Menu />
+            <Menu sx={{ color: 'common.white' }} />
           </IconButton>
-          <Typography variant="h6" component="div">
-            {title}
-          </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            {logo && <Box sx={{ display: 'flex', height: 40 }}>{logo}</Box>}
+            <Typography variant="h6" component="div" color="common.white">
+              {title}
+            </Typography>
+          </Box>
         </Toolbar>
       </AppBar>
 
@@ -95,7 +99,7 @@ export const Shell = ({ title, menu, children }) => {
           sx={{
             p: 2,
             flex: 1,
-            backgroundColor: 'grey.100',
+            backgroundColor: 'background.main',
             minHeight: '100vh',
             display: 'flex',
             flexDirection: 'column'

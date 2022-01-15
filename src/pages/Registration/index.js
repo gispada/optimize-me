@@ -41,7 +41,7 @@ const Registration = () => {
           <CardHeader
             title={title}
             subheader={subtitle}
-            titleTypographyProps={{ color: 'primary' }}
+            titleTypographyProps={{ fontWeight: 'bold' }}
           />
           <CardContent>
             <Grid container spacing={4}>

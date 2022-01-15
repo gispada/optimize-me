@@ -47,8 +47,8 @@ const Gallery = () => {
       dispatch(galleryActions.setLoading(true))
       const albums = await api.get('albums')
       dispatch(galleryActions.setAlbums(addRating(albums)))
-      //const photos = await api.get('photos?_start=0&_limit=500')
-      //dispatch(galleryActions.setPhotos(photos))
+      // const photos = await api.get('photos?_start=0&_limit=500')
+      // dispatch(galleryActions.setPhotos(photos))
       const users = await api.get('users')
       dispatch(galleryActions.setUsers(users))
       dispatch(galleryActions.setLoading(false))
@@ -79,7 +79,7 @@ const Gallery = () => {
         columns={albumColumns}
         data={tableData}
         alternativeStyle
-        emptyMessage="Fetching albums..."
+        emptyMessage="No albums found"
       />
     </Box>
   )

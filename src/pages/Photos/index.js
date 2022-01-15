@@ -96,7 +96,7 @@ const Photos = () => {
         fullWidth
         maxWidth="lg"
       >
-        <DialogTitle sx={{ color: 'primary.main' }}>
+        <DialogTitle sx={{ color: 'secondary.main' }}>
           Photo {activePhoto}
         </DialogTitle>
         <DialogContent>
@@ -114,7 +114,6 @@ const Photos = () => {
                   placeholder="Add your notes here..."
                   multiline
                   rows={4}
-                  maxRows={8}
                   value={notes}
                   onChange={({ target }) =>
                     dispatch(

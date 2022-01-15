@@ -9,11 +9,11 @@ const LinkCell = ({ value, row }) => {
         component={Link}
         to={`/gallery/${row.id}`}
         fontSize={14}
-        sx={{ textDecoration: 'none', color: 'primary.main' }}
+        sx={{ textDecoration: 'none', color: 'secondary.light' }}
       >
         {value}
       </Typography>
-      <ChevronRightRounded sx={{ color: 'primary.main' }} />
+      <ChevronRightRounded sx={{ color: 'secondary.light' }} />
     </Box>
   )
 }

@@ -5,7 +5,8 @@ const initialState = {
   filters: {},
   albums: [],
   photos: [],
-  users: []
+  users: [],
+  activePhoto: null
 }
 
 const gallerySlice = createSlice({
@@ -36,6 +37,13 @@ const gallerySlice = createSlice({
     },
     resetFilters: state => {
       state.filters = {}
+    },
+    setActivePhoto: (state, { payload }) => {
+      state.activePhoto = payload
+    },
+    setPhotoNotes: (state, { payload }) => {
+      const photoToModify = state.photos.find(({ id }) => id === payload.id)
+      photoToModify.notes = payload.value
     },
     reset: () => initialState
   }

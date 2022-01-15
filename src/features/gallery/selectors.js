@@ -25,3 +25,13 @@ export const selectAlbums = createSelector(selectState, ({ albums, users }) => {
     author: users.find(({ id }) => id === album.userId)?.name
   }))
 })
+
+export const selectActivePhoto = createSelector(
+  selectState,
+  substate => substate.activePhoto
+)
+
+export const selectPhotos = createSelector(
+  selectState,
+  substate => substate.photos
+)

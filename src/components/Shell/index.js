@@ -59,7 +59,9 @@ export const Shell = ({ title, logo, menu, children }) => {
             <Menu sx={{ color: 'common.white' }} />
           </IconButton>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            {logo && <Box sx={{ display: 'flex', height: 40 }}>{logo}</Box>}
+            {logo && (
+              <Box sx={{ display: 'flex', height: 40, width: 60 }}>{logo}</Box>
+            )}
             <Typography variant="h6" component="div" color="common.white">
               {title}
             </Typography>

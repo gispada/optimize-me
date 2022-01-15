@@ -1,6 +1,7 @@
 import { createTheme } from '@mui/material/styles'
 
 export default createTheme({
+  drawerWidth: 240,
   palette: {
     primary: {
       light: '#757ce8',

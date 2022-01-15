@@ -16,11 +16,9 @@ import Menu from '@mui/icons-material/MenuRounded'
 import { Link } from 'react-router-dom'
 import { Footer } from '../Footer'
 
-const drawerWidth = 240
-
 const drawerStyle = {
-  width: drawerWidth,
-  '& .MuiDrawer-paper': { width: drawerWidth }
+  width: ({ drawerWidth }) => drawerWidth,
+  '& .MuiDrawer-paper': { width: ({ drawerWidth }) => drawerWidth }
 }
 
 export const Shell = ({ title, menu, children }) => {

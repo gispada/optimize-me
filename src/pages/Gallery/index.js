@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { Box, Typography } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
+import { batch } from 'react-redux'
 import {
   isLoading,
   selectAlbums,
@@ -45,13 +46,17 @@ const Gallery = () => {
   useEffect(() => {
     const fetchResources = async () => {
       dispatch(galleryActions.setLoading(true))
-      const albums = await api.get('albums')
-      dispatch(galleryActions.setAlbums(addRating(albums)))
-      // const photos = await api.get('photos?_start=0&_limit=500')
-      // dispatch(galleryActions.setPhotos(photos))
-      const users = await api.get('users')
-      dispatch(galleryActions.setUsers(users))
-      dispatch(galleryActions.setLoading(false))
+
+      const [albums, users] = await Promise.all([
+        api.get('albums'),
+        api.get('users')
+      ])
+
+      batch(() => {
+        dispatch(galleryActions.setAlbums(addRating(albums)))
+        dispatch(galleryActions.setUsers(users))
+        dispatch(galleryActions.setLoading(false))
+      })
     }
 
     fetchResources()

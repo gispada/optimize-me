@@ -1,12 +1,11 @@
 import { useEffect } from 'react'
-import { Box, Typography } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
 import { batch } from 'react-redux'
+import { Box, Typography } from '@mui/material'
+import { capitalize } from 'lodash'
 import {
   isLoading,
-  selectAlbums,
-  selectFilters,
-  selectUsers
+  selectFilteredAlbums
 } from '../../features/gallery/selectors'
 import { galleryActions } from '../../features/gallery/reducer'
 import { api } from '../../utils'
@@ -33,15 +32,23 @@ const albumColumns = [
   }
 ]
 
-const addRating = items =>
-  items.map(item => ({ ...item, rating: Math.round(Math.random() * 5) }))
+const populateAlbums = (albums, users) => {
+  const usersById = users.reduce(
+    (acc, user) => ({ ...acc, [user.id]: user }),
+    {}
+  )
+  return albums.map(album => ({
+    ...album,
+    rating: Math.round(Math.random() * 5),
+    title: capitalize(album.title),
+    author: usersById[album.userId].name
+  }))
+}
 
 const Gallery = () => {
   const dispatch = useDispatch()
   const loading = useSelector(isLoading)
-  const albums = useSelector(selectAlbums)
-  const users = useSelector(selectUsers)
-  const filters = useSelector(selectFilters)
+  const filteredAlbums = useSelector(selectFilteredAlbums)
 
   useEffect(() => {
     const fetchResources = async () => {
@@ -53,7 +60,7 @@ const Gallery = () => {
       ])
 
       batch(() => {
-        dispatch(galleryActions.setAlbums(addRating(albums)))
+        dispatch(galleryActions.setAlbums(populateAlbums(albums, users)))
         dispatch(galleryActions.setUsers(users))
         dispatch(galleryActions.setLoading(false))
       })
@@ -66,10 +73,6 @@ const Gallery = () => {
     }
   }, [dispatch])
 
-  const tableData = albums.filter(album =>
-    Object.entries(filters).every(([filter, value]) => album[filter] === value)
-  )
-
   return (
     <Box>
       <Loader visible={loading} />
@@ -78,13 +81,14 @@ const Gallery = () => {
         Browse photos
       </Typography>
 
-      <Filters users={users} filters={filters} />
+      <Filters />
 
       <Table
         columns={albumColumns}
-        data={tableData}
+        data={filteredAlbums}
         alternativeStyle
         emptyMessage="No albums found"
+        pagination
       />
     </Box>
   )

@@ -1,4 +1,3 @@
-import { capitalize } from 'lodash'
 import { createSelector } from 'reselect'
 
 const selectState = state => state.gallery
@@ -18,13 +17,22 @@ export const selectFilters = createSelector(
   substate => substate.filters
 )
 
-export const selectAlbums = createSelector(selectState, ({ albums, users }) => {
-  return albums.map(album => ({
-    ...album,
-    title: capitalize(album.title),
-    author: users.find(({ id }) => id === album.userId)?.name
-  }))
-})
+export const selectAlbums = createSelector(
+  selectState,
+  substate => substate.albums
+)
+
+export const selectFilteredAlbums = createSelector(
+  selectAlbums,
+  selectFilters,
+  (albums, filters) => {
+    const filterEntries = Object.entries(filters)
+    if (filterEntries.length === 0) return albums
+    return albums.filter(album =>
+      filterEntries.every(([filterName, value]) => album[filterName] === value)
+    )
+  }
+)
 
 export const selectActivePhoto = createSelector(
   selectState,

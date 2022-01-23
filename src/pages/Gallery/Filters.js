@@ -1,9 +1,14 @@
-import { useDispatch } from 'react-redux'
+import { memo } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { Card, CardHeader, CardContent, Grid, Button } from '@mui/material'
 import { galleryActions } from '../../features/gallery/reducer'
+import { selectFilters, selectUsers } from '../../features/gallery/selectors'
 import Select from '../../components/Select'
 
-const Filters = ({ users, filters }) => {
+const Filters = () => {
+  const users = useSelector(selectUsers)
+  const filters = useSelector(selectFilters)
+
   const dispatch = useDispatch()
 
   const filtersConfig = [
@@ -64,4 +69,4 @@ const Filters = ({ users, filters }) => {
   )
 }
 
-export default Filters
+export default memo(Filters)

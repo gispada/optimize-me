@@ -1,6 +1,7 @@
+import { memo } from 'react'
+import { Link } from 'react-router-dom'
 import { Typography, Box } from '@mui/material'
 import ChevronRightRounded from '@mui/icons-material/ChevronRightRounded'
-import { Link } from 'react-router-dom'
 
 const LinkCell = ({ value, row }) => {
   return (
@@ -18,4 +19,4 @@ const LinkCell = ({ value, row }) => {
   )
 }
 
-export default LinkCell
+export default memo(LinkCell)

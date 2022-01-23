@@ -1,3 +1,4 @@
+import { useEffect, useMemo, useState } from 'react'
 import {
   TableContainer,
   TableHead,
@@ -9,6 +10,7 @@ import {
   Paper
 } from '@mui/material'
 import { styled } from '@mui/material/styles'
+import Pagination from './Pagination'
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -20,9 +22,6 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   '&:nth-of-type(odd)': {
     backgroundColor: theme.palette.action.hover
-  },
-  '&:last-child td, &:last-child th': {
-    border: 0
   }
 }))
 
@@ -30,10 +29,32 @@ const Table = ({
   columns,
   data,
   alternativeStyle,
+  pagination,
+  paginationSize = 10,
   emptyMessage = 'No items'
 }) => {
+  const [page, setPage] = useState(0)
+
   const Cell = alternativeStyle ? StyledTableCell : TableCell
   const Row = alternativeStyle ? StyledTableRow : TableRow
+
+  const tableData = useMemo(
+    () =>
+      data && pagination
+        ? data.slice(
+            page * paginationSize,
+            page * paginationSize + paginationSize
+          )
+        : data,
+    [data, page, pagination, paginationSize]
+  )
+
+  const tooManyRows = (data || []).length <= page * paginationSize
+
+  useEffect(() => {
+    // Reset pagination when there are more rows than actual data
+    if (tooManyRows) setPage(0)
+  }, [data, tooManyRows])
 
   const renderEmptyRow = () => (
     <Row>
@@ -42,13 +63,10 @@ const Table = ({
   )
 
   const renderBody = () =>
-    data.map((row, i) => {
+    tableData.map((row, i) => {
       const rowId = row.id || `row-${i}`
       return (
-        <Row
-          key={rowId}
-          sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-        >
+        <Row key={rowId}>
           {columns.map(({ dataIndex, render }, i) => (
             <TableCell key={`${rowId}-${i}`}>
               {render ? render(row[dataIndex], row) : row[dataIndex]}
@@ -77,8 +95,16 @@ const Table = ({
           </TableRow>
         </TableHead>
         <TableBody>
-          {data?.length === 0 ? renderEmptyRow() : renderBody()}
+          {tableData?.length === 0 ? renderEmptyRow() : renderBody()}
         </TableBody>
+        {pagination && (
+          <Pagination
+            size={paginationSize}
+            total={data?.length}
+            page={page}
+            onChange={setPage}
+          />
+        )}
       </MuiTable>
     </TableContainer>
   )

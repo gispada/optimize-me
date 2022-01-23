@@ -4,3 +4,5 @@ export const makeApi = baseUrl => ({
 })
 
 export const api = makeApi('https://jsonplaceholder.typicode.com')
+
+export const prop = key => object => object?.[key]

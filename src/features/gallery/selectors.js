@@ -1,26 +1,15 @@
 import { createSelector } from 'reselect'
+import { prop } from '../../utils'
 
-const selectState = state => state.gallery
+const selectState = prop('gallery')
 
-export const isLoading = createSelector(
-  selectState,
-  substate => substate.loading
-)
+export const isLoading = createSelector(selectState, prop('loading'))
 
-export const selectUsers = createSelector(
-  selectState,
-  substate => substate.users
-)
+export const selectUsers = createSelector(selectState, prop('users'))
 
-export const selectFilters = createSelector(
-  selectState,
-  substate => substate.filters
-)
+export const selectFilters = createSelector(selectState, prop('filters'))
 
-export const selectAlbums = createSelector(
-  selectState,
-  substate => substate.albums
-)
+export const selectAlbums = createSelector(selectState, prop('albums'))
 
 export const selectFilteredAlbums = createSelector(
   selectAlbums,
@@ -34,12 +23,28 @@ export const selectFilteredAlbums = createSelector(
   }
 )
 
+export const selectPhotos = createSelector(selectState, prop('photos'))
+
 export const selectActivePhoto = createSelector(
   selectState,
-  substate => substate.activePhoto
+  prop('activePhoto')
 )
 
-export const selectPhotos = createSelector(
-  selectState,
-  substate => substate.photos
+// This might be overkill, but serves as an example to only render the smallest portion of UI
+// when editing the active photo's notes (see pages/Photos/DetailDialog.js)
+export const selectActivePhotoId = createSelector(selectActivePhoto, prop('id'))
+
+export const selectActivePhotoUrl = createSelector(
+  selectActivePhoto,
+  prop('url')
+)
+
+export const selectActivePhotoTitle = createSelector(
+  selectActivePhoto,
+  prop('title')
+)
+
+export const selectActivePhotoNotes = createSelector(
+  selectActivePhoto,
+  prop('notes')
 )

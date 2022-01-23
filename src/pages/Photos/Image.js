@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import {
   Card,
   CardMedia,
@@ -14,7 +15,7 @@ import { capitalize } from 'lodash'
 const Image = ({ title, id, url, onClick }) => {
   return (
     <Card>
-      <CardActionArea onClick={onClick}>
+      <CardActionArea onClick={() => onClick(id)}>
         <CardMedia component="img" height="240" image={url} alt={title} />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
@@ -37,4 +38,4 @@ const Image = ({ title, id, url, onClick }) => {
   )
 }
 
-export default Image
+export default memo(Image)

@@ -1,28 +1,17 @@
-import { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useCallback, useEffect } from 'react'
+import { batch, useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
-import { capitalize } from 'lodash'
-import {
-  Box,
-  Typography,
-  Grid,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogActions,
-  Button,
-  TextField
-} from '@mui/material'
+import { Box, Typography, Grid } from '@mui/material'
 import { api } from '../../utils'
 import { galleryActions } from '../../features/gallery/reducer'
 import {
   isLoading,
-  selectActivePhoto,
   selectAlbums,
   selectPhotos
 } from '../../features/gallery/selectors'
 import Loader from '../../components/Loader'
 import Image from './Image'
+import DetailDialog from './DetailDialog'
 
 const changeImageSource = (item, i) => ({
   ...item,
@@ -36,16 +25,21 @@ const Photos = () => {
   const loading = useSelector(isLoading)
   const photos = useSelector(selectPhotos)
   const [album] = useSelector(selectAlbums)
-  const activePhoto = useSelector(selectActivePhoto)
 
   useEffect(() => {
     const fetchResources = async () => {
       dispatch(galleryActions.setLoading(true))
-      const album = await api.get(`albums?id=${albumId}`)
-      dispatch(galleryActions.setAlbums(album))
-      const photos = await api.get(`photos?albumId=${albumId}`)
-      dispatch(galleryActions.setPhotos(photos.map(changeImageSource)))
-      dispatch(galleryActions.setLoading(false))
+
+      const [album, photos] = await Promise.all([
+        api.get(`albums?id=${albumId}`),
+        api.get(`photos?albumId=${albumId}`)
+      ])
+
+      batch(() => {
+        dispatch(galleryActions.setAlbums(album))
+        dispatch(galleryActions.setPhotos(photos.map(changeImageSource)))
+        dispatch(galleryActions.setLoading(false))
+      })
     }
 
     fetchResources()
@@ -55,11 +49,12 @@ const Photos = () => {
     }
   }, [dispatch, albumId])
 
-  const {
-    title,
-    url,
-    notes = ''
-  } = photos.find(({ id }) => id === activePhoto) || {}
+  const setActivePhoto = useCallback(
+    id => {
+      dispatch(galleryActions.setActivePhoto(id))
+    },
+    [dispatch]
+  )
 
   return (
     <>
@@ -70,70 +65,14 @@ const Photos = () => {
         </Typography>
 
         <Grid container spacing={2}>
-          {photos.map(({ id, url, title }, i) => (
-            <Grid
-              key={`${url}_${i}`}
-              item
-              xs={12}
-              md={4}
-              lg={3}
-              justifyContent="center"
-            >
-              <Image
-                id={id}
-                url={url}
-                title={title}
-                onClick={() => dispatch(galleryActions.setActivePhoto(id))}
-              />
+          {photos.map(({ url, id, title }) => (
+            <Grid key={id} item xs={12} md={4} lg={3} justifyContent="center">
+              <Image id={id} url={url} title={title} onClick={setActivePhoto} />
             </Grid>
           ))}
         </Grid>
       </Box>
-
-      <Dialog
-        open={!!activePhoto}
-        onClose={() => dispatch(galleryActions.setActivePhoto(null))}
-        fullWidth
-        maxWidth="lg"
-      >
-        <DialogTitle sx={{ color: 'secondary.main' }}>
-          Photo {activePhoto}
-        </DialogTitle>
-        <DialogContent>
-          <Grid container spacing={2}>
-            <Grid item xs={12} md={8}>
-              <img width="100%" src={url} alt={title} />
-            </Grid>
-            <Grid item xs={12} md={4}>
-              <Box sx={{ position: 'sticky', top: 0 }}>
-                <Typography variant="h6">Description</Typography>
-                <Typography gutterBottom>{capitalize(title)}</Typography>
-                <Typography variant="h6">Notes</Typography>
-                <TextField
-                  fullWidth
-                  placeholder="Add your notes here..."
-                  multiline
-                  rows={4}
-                  value={notes}
-                  onChange={({ target }) =>
-                    dispatch(
-                      galleryActions.setPhotoNotes({
-                        id: activePhoto,
-                        value: target.value
-                      })
-                    )
-                  }
-                />
-              </Box>
-            </Grid>
-          </Grid>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => dispatch(galleryActions.setActivePhoto(null))}>
-            Close
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <DetailDialog />
     </>
   )
 }

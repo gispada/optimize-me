@@ -39,11 +39,18 @@ const gallerySlice = createSlice({
       state.filters = {}
     },
     setActivePhoto: (state, { payload }) => {
-      state.activePhoto = payload
+      // Clone the original photo for editing
+      state.activePhoto = { ...state.photos.find(({ id }) => id === payload) }
     },
-    setPhotoNotes: (state, { payload }) => {
-      const photoToModify = state.photos.find(({ id }) => id === payload.id)
-      photoToModify.notes = payload.value
+    setActivePhotoNotes: (state, { payload }) => {
+      state.activePhoto.notes = payload
+    },
+    commitActivePhoto: state => {
+      const { photos, activePhoto } = state
+      state.photos = photos.map(photo =>
+        photo.id === activePhoto.id ? activePhoto : photo
+      )
+      state.activePhoto = null
     },
     reset: () => initialState
   }
